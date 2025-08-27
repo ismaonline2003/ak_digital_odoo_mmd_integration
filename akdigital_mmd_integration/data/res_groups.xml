@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="akdigital_mmd_integration_admin" model="res.groups">
+            <field name="name">Integración con MMD: Administrador</field>
+        </record>
+    </data>
+</odoo>
