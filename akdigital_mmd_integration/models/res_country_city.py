@@ -9,5 +9,6 @@ class ResCountryCity(models.Model):
         ('mmd_id_uniq', 'unique(mmd_id)', 'El ID de la Ciudad de MMD debe ser único')
     ]
 
+    name = fields.Char(string="Nombre")
     country_id = fields.Many2one(comodel_name="res.country", string="País")
     mmd_id = fields.Char(string="MMD - ID Ciudad")

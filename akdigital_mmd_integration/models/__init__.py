@@ -6,3 +6,4 @@ from . import product_template
 from . import uom_uom
 from . import res_country_state
 from . import res_country_city
+from . import product_category

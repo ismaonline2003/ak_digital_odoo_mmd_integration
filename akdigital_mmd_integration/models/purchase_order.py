@@ -764,9 +764,10 @@ class PurchaseOrder(models.Model):
 
     def mmd_create_reposition_partner(self, data):
         dict_return = {"status": "success", "message": "", "data": {}}
+        mmd_id = str(data["id"])
         country_id = self.env["res.country"].search([('code', '=', data["country_code"])], limit=1)
-        state_id = self.env["res.country.state"].search([('mmd_id', '=', str(data["province_id"]))], limit=1)
-        city_id = self.env["res.country.city"].search([('mmd_id', '=', str(data["city_id"]))], limit=1)
+        state_id = self.env["res.country.state"].search([('mmd_id', '=', mmd_id)], limit=1)
+        city_id = self.env["res.country.city"].search([('mmd_id', '=', mmd_id)], limit=1)
 
         if not country_id:
             dict_return = {"status": "country_not_found",
@@ -789,17 +790,15 @@ class PurchaseOrder(models.Model):
                            }
             return dict_return
 
-        mmd_id = str(line["id"])
-
         partner_id = self.env["res.partner"].create({
             "mmd_id": mmd_id,
-            "type": data["contact"]["type"],
-            "name": data["contact"]["fullname"],
-            "vat": data["contact"]["nif"],
-            "phone": data["contact"]["phone"],
-            "mobile": data["contact"]["mobile"],
-            "street": data["contact"]["address"],
-            "email": data["contact"]["email"],
+            "company_type": data["type"],
+            "name": data["fullname"],
+            "vat": data["nif"],
+            "phone": data["phone"],
+            "mobile": data["mobile"],
+            "street": data["address"],
+            "email": data["email"],
             "country_id": country_id.id,
             "state_id": state_id.id,
             "city_id": city_id.id
@@ -838,11 +837,12 @@ class PurchaseOrder(models.Model):
                     continue
 
                 product_id = product_id.create({
+                    "purchase_ok": True,
                     "mmd_id": mmd_id,
                     "name": line["product"]["name"],
                     "standard_price": line["product"]["cost"],
                     "list_price": line["product"]["price"],
-                    "category_id": categ_id,
+                    "categ_id": categ_id.id,
                     "default_code": line["product"]["ref"],
                     "barcode": line["product"]["barcode"],
                     "uom_id": uom_id.id,
@@ -855,6 +855,13 @@ class PurchaseOrder(models.Model):
                 "product_qty": line["quantity"]
             }))
             i += 1
+
+        if error_message != "":
+            dict_return.update({
+                "status": "order_line_error",
+                "message": error_message,
+                "data": {}
+            })
 
         return dict_return
 
@@ -906,7 +913,7 @@ class PurchaseOrder(models.Model):
             ]
         }
 
-        body_validations = self.create_reposition_body_validations(data)
+        body_validations = self.mmd_create_reposition_body_validations(data)
         if body_validations.get("status", "") != "success":
             return body_validations
 
@@ -931,6 +938,19 @@ class PurchaseOrder(models.Model):
 
         prepare_order_lines = self.mmd_create_reposition_prepare_order_lines(data["lines"])
 
+        if prepare_order_lines["status"] != "success":
+            return prepare_order_lines
+
+        warehouse_mmd_id = str(data["warehouse_id"])
+        warehouse_id = self.env["stock.warehouse"].search([('mmd_id', '=', warehouse_mmd_id)], limit=1)
+
+        if not warehouse_id:
+            dict_return = {"status": "warehouse_not_found",
+                           "message": "El almacen con el MMD ID {} no fue encontrado.".format(warehouse_mmd_id),
+                           "data": data
+                           }
+            return dict_return
+
         try:
             date_order = datetime.datetime.strptime(data["date"], "%Y-%m-%d")
         except Exception as error:
@@ -944,9 +964,13 @@ class PurchaseOrder(models.Model):
 
         record_data = {
             "partner_id": partner_id.id,
-            "date_order": date_order
-
+            "date_order": date_order,
+            "order_line": prepare_order_lines["data"],
+            "picking_type_id": warehouse_id.in_type_id.id
         }
 
-
-        print("create_reposition")
+        purchase_order_id = self.env["purchase.order"].create(record_data)
+        purchase_order_id.button_confirm()
+        purchase_order_id.picking_ids.button_validate()
+        dict_return["data"] = purchase_order_id.id
+        return dict_return

@@ -15,7 +15,11 @@
         "data/res_groups.xml",
         "security/ir.model.access.csv",
         "views/product_template.xml",
-        "views/res_partner.xml"
+        "views/res_partner.xml",
+        "views/res_country_city.xml",
+        "views/res_country_state.xml",
+        "views/product_category.xml",
+        "views/stock_warehouse.xml"
     ],
     'installable': True,
 }

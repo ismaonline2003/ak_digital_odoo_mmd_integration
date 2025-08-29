@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="uom_uom_form_inherit" model="ir.ui.view">
+        <field name="name">view.country.state.tree.inherit</field>
+        <field name="model">res.country.state</field>
+        <field name="inherit_id" ref="base.view_country_state_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="mmd_id" groups="akdigital_mmd_integration.akdigital_mmd_integration_admin"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
