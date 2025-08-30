@@ -11,4 +11,4 @@ class ResCountryCity(models.Model):
 
     name = fields.Char(string="Nombre")
     country_id = fields.Many2one(comodel_name="res.country", string="País")
-    mmd_id = fields.Char(string="MMD - ID Ciudad")
+    mmd_id = fields.Char(string="MMD Pawn - ID Ciudad")

@@ -8,4 +8,4 @@ class ProductTemplate(models.Model):
         ('mmd_id_uniq', 'unique(mmd_id)', 'El ID Producto de MMD debe ser único')
     ]
 
-    mmd_id = fields.Char(string="MMD - ID Producto")
+    mmd_id = fields.Char(string="MMD Pawn - ID Producto")

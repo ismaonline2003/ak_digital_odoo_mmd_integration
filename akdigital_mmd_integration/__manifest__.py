@@ -2,9 +2,9 @@
 {
     'name': 'AK Digital - MMD Integration',
     'version': '18.0.0.7',
-    'summary': 'Integración entre Odoo y el sistema de Mas me Dan (MMD)',
+    'summary': 'Integración entre Odoo y el sistema de Mas me Dan (MMD Pawn)',
     'description': """
-        Integración entre Odoo y el sistema de Mas me Dan (MMD)
+        Integración entre Odoo y el sistema de Mas me Dan (MMD Pawn)
     """,
     'author': 'AK Digital',
     'contributor': 'Ismael Castillo - ismaonline2000@gmail.com',
@@ -19,7 +19,9 @@
         "views/res_country_city.xml",
         "views/res_country_state.xml",
         "views/product_category.xml",
-        "views/stock_warehouse.xml"
+        "views/stock_warehouse.xml",
+        "views/uom_uom.xml",
+        "views/purchase_order.xml"
     ],
     'installable': True,
 }

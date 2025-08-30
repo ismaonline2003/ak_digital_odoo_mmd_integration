@@ -8,4 +8,4 @@ class UomUom(models.Model):
         ('mmd_id_uniq', 'unique(mmd_id)', 'El ID de la Unidad de Medida de MMD debe ser único')
     ]
 
-    mmd_id = fields.Char(string="MMD - ID Unidad Medida")
+    mmd_id = fields.Char(string="MMD Pawn - ID Unidad Medida")

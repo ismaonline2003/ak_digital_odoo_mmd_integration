@@ -8,6 +8,9 @@
             <xpath expr="//field[@name='code']" position="after">
                 <field name="mmd_id" groups="akdigital_mmd_integration.akdigital_mmd_integration_admin"/>
             </xpath>
+            <xpath expr="//field[@name='in_type_id']" position="after">
+                <field name="reposition_type_id" groups="akdigital_mmd_integration.akdigital_mmd_integration_admin"/>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -8,4 +8,4 @@ class ResCountryState(models.Model):
         ('mmd_id_uniq', 'unique(mmd_id)', 'El ID de la Provincia de MMD debe ser único')
     ]
 
-    mmd_id = fields.Char(string="MMD - ID Provincia")
+    mmd_id = fields.Char(string="MMD Pawn - ID Provincia")

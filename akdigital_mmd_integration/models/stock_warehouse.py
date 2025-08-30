@@ -8,4 +8,5 @@ class StockWarehouse(models.Model):
         ('mmd_id_uniq', 'unique(mmd_id)', 'El ID Almacen de MMD debe ser único')
     ]
 
-    mmd_id = fields.Char(string="MMD - ID Almacen")
+    mmd_id = fields.Char(string="MMD Pawn - ID Almacen")
+    reposition_type_id = fields.Many2one(comodel_name="stock.picking.type", string="Tipo de Reposiciones")

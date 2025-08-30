@@ -9,7 +9,7 @@ class PurchaseOrder(models.Model):
         ('mmd_contract_number_uniq', 'unique(mmd_contract_number)', 'El Número de contrato de MMD debe ser único')
     ]
 
-    mmd_contract_number = fields.Char(string="MMD - Contrato")
+    mmd_contract_number = fields.Char(string="MMD Pawn - Contrato")
 
     def mmd_create_reposition_contact_body_validations(self, data):
         dict_return = {"status": "success", "message": "", "data": {}}
@@ -951,6 +951,15 @@ class PurchaseOrder(models.Model):
                            }
             return dict_return
 
+        if not warehouse_id.reposition_type_id:
+            dict_return = {"status": "reposition_type_not_established",
+                           "message": "Se debe establecer un tipo de operación para "
+                                      "reposiciones en al almacen con el MMD ID {} "
+                                      "(En el sistema Odoo).".format(warehouse_mmd_id),
+                           "data": data
+                           }
+            return dict_return
+
         try:
             date_order = datetime.datetime.strptime(data["date"], "%Y-%m-%d")
         except Exception as error:
@@ -963,6 +972,7 @@ class PurchaseOrder(models.Model):
         date_order = date_order.date()
 
         record_data = {
+            "mmd_contract_number": data["contract_number"],
             "partner_id": partner_id.id,
             "date_order": date_order,
             "order_line": prepare_order_lines["data"],
